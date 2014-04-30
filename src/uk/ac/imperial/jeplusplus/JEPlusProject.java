@@ -8,8 +8,15 @@ import java.io.InputStreamReader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
@@ -64,5 +71,33 @@ public class JEPlusProject {
 
 	public Document getProjectXML() {
 		return jep;
+	}
+	
+	/**
+	 * Gets the Node of this JEPlusProject containing the IDF file name
+	 * 
+	 * @return an XML Node
+	 * @throws XPathExpressionException
+	 */
+	public Node getIDFNode() throws XPathExpressionException {		
+		XPathFactory xPathfactory = XPathFactory.newInstance();
+		XPath xpath = xPathfactory.newXPath();
+		XPathExpression expr = xpath.compile("//void[@property=\"IDFTemplate\"]//string");
+		NodeList nl = (NodeList) expr.evaluate(jep, XPathConstants.NODESET);		
+		return nl.item(0);
+	}
+	
+	/**
+	 * Gets the Node of this JEPlusProject containing the MVI file name
+	 * 
+	 * @return an XML Node
+	 * @throws XPathExpressionException
+	 */
+	public Node getMVINode() throws XPathExpressionException {		
+		XPathFactory xPathfactory = XPathFactory.newInstance();
+		XPath xpath = xPathfactory.newXPath();
+		XPathExpression expr = xpath.compile("//void[@property=\"RVIFile\"]//string");
+		NodeList nl = (NodeList) expr.evaluate(jep, XPathConstants.NODESET);		
+		return nl.item(0);
 	}
 }
