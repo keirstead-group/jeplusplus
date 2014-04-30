@@ -94,4 +94,11 @@ public class JEPlusProjectTest {
 		}
 	}
 
+	@Test
+	public void testSetNotes() {
+		String notes = "My project notes";
+		project.setNotes(notes);
+		Node n = project.getNotesNode();
+		assertEquals(notes, n.getFirstChild().getNodeValue());
+	}
 }

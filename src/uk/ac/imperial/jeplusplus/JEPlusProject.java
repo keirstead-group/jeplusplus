@@ -169,4 +169,18 @@ public class JEPlusProject {
 		n.setNodeValue(idf);
 	}
 
+	/**
+	 * Sets the project notes
+	 * 
+	 * @param notes	a String giving the project notes.
+	 * 
+	 */
+	public void setNotes(String notes) {
+		Node n = getNotesNode();
+		n.getFirstChild().setNodeValue(notes);
+	}
+
+	public Node getNotesNode() {
+		return getSingleNode("//void[@property=\"projectNotes\"]//string");
+	}
 }
