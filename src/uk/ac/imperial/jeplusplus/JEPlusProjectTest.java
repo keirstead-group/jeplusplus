@@ -60,11 +60,35 @@ public class JEPlusProjectTest {
 	}
 	
 	@Test
+	public void testSetIDFName() {		
+		try {
+			String idfName = "test.idf";
+			project.setIDFName(idfName);
+			Node n = project.getIDFNode();			
+			assertEquals(idfName, n.getFirstChild().getNodeValue());
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+	}
+	
+	@Test
 	public void testGetMVINode() {
 		try {
 			Node n = project.getMVINode();			
 			String fileName = "HVACTemplate-5ZoneFanCoil.mvi";
 			assertEquals(fileName, n.getFirstChild().getNodeValue());
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testSetMVIName() {		
+		try {
+			String mviName = "test.mvi";
+			project.setMVIName(mviName);
+			Node n = project.getMVINode();			
+			assertEquals(mviName, n.getFirstChild().getNodeValue());
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
