@@ -101,4 +101,12 @@ public class JEPlusProjectTest {
 		Node n = project.getNotesNode();
 		assertEquals(notes, n.getFirstChild().getNodeValue());
 	}
+	
+	@Test
+	public void testSetWeatherName() {
+		String weather = "weather_file.epw";
+		project.setWeatherName(weather);
+		Node n = project.getWeatherNode();
+		assertEquals(weather, n.getFirstChild().getNodeValue());
+	}
 }

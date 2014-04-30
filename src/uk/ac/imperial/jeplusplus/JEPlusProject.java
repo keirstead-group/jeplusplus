@@ -158,15 +158,14 @@ public class JEPlusProject {
 	/**
 	 * Sets the name of the MVI file for this JEPlusProject
 	 * 
-	 * @param idf
+	 * @param mvi
 	 *            a String giving the filename. This should be a relative path
 	 *            and assumes that the file is located in the same directory as
 	 *            the project file.
-	 * @throws XPathExpressionException
 	 */
-	public void setMVIName(String idf) throws XPathExpressionException {
+	public void setMVIName(String mvi) {
 		Node n = getMVINode().getFirstChild();
-		n.setNodeValue(idf);
+		n.setNodeValue(mvi);
 	}
 
 	/**
@@ -180,7 +179,25 @@ public class JEPlusProject {
 		n.getFirstChild().setNodeValue(notes);
 	}
 
-	public Node getNotesNode() {
+	protected Node getNotesNode() {
 		return getSingleNode("//void[@property=\"projectNotes\"]//string");
+	}
+	
+	/**
+	 * Sets the name of the weather file for this JEPlusProject
+	 * 
+	 * @param weather
+	 *            a String giving the filename. This should be a relative path
+	 *            and assumes that the file is located in the same directory as
+	 *            the project file.
+	 */
+	public void setWeatherName(String weather) {
+		Node n = getWeatherNode();
+		n.getFirstChild().setNodeValue(weather);
+	}
+
+	
+	protected Node getWeatherNode() {
+		return getSingleNode("//void[@property=\"weatherFile\"]//string");
 	}
 }
