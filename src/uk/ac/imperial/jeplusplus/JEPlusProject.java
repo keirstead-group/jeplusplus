@@ -28,13 +28,31 @@ import org.xml.sax.SAXException;
 public class JEPlusProject {
 
 	private static String JEP_TEMPLATE = "/resources/template.jep";
-	private String notes;
 	private Document jep;
 
+	protected JEPlusProject() {
+		try {
+			loadTemplate();
+		} catch (Exception e) {
+			System.err.println("Unable to find project template. Quitting.");
+			System.exit(1);
+		}
+	}
+
 	public JEPlusProject(File idf, File mvi) {
-		// this.idfFile = idf;
-		// this.mviFile = mvi;
-		notes = "jEPlus E+ v80 example";
+		this();
+		if (idf == null || mvi == null) {
+			throw new IllegalArgumentException("idf and mvi must be non-null");
+		}
+		try {
+			setIDFName(idf.getName());
+			setMVIName(mvi.getName());
+			// setNotes("jEPlus E+ v80 example");
+		} catch (XPathExpressionException e) {
+			System.err.println("Unable to set attributes.  Quitting");
+			System.exit(1);
+		}
+
 	}
 
 	/**
@@ -74,33 +92,53 @@ public class JEPlusProject {
 	}
 
 	/**
+	 * Gets a node of length 1 from this JEPlusProject DOM
+	 * 
+	 * @param query
+	 *            an xpath search query
+	 * 
+	 * @return the Node specified, if <code>query</code> matches a NodeList of
+	 *         length 1. Otherwise a warning is printed and null is returned.
+	 */
+	private Node getSingleNode(String query) {
+		try {
+			XPathFactory xPathfactory = XPathFactory.newInstance();
+			XPath xpath = xPathfactory.newXPath();
+			XPathExpression expr;
+			expr = xpath.compile(query);
+			NodeList nl = (NodeList) expr.evaluate(jep, XPathConstants.NODESET);
+
+			if (nl.getLength() == 1) {
+				return nl.item(0);
+			} else {
+				System.out.println(String.format(
+						"%d nodes found matching '%s'.  Returning null",
+						nl.getLength(), query));
+				return null;
+			}
+		} catch (XPathExpressionException e) {
+			return null;
+		}
+	}
+
+	/**
 	 * Gets the Node of this JEPlusProject containing the IDF file name
 	 * 
 	 * @return an XML Node
-	 * @throws XPathExpressionException
 	 */
-	protected Node getIDFNode() throws XPathExpressionException {
-		XPathFactory xPathfactory = XPathFactory.newInstance();
-		XPath xpath = xPathfactory.newXPath();
-		XPathExpression expr = xpath
-				.compile("//void[@property=\"IDFTemplate\"]//string");
-		NodeList nl = (NodeList) expr.evaluate(jep, XPathConstants.NODESET);
-		return nl.item(0);
+	protected Node getIDFNode() {
+		String query = "//void[@property=\"IDFTemplate\"]//string";
+		return getSingleNode(query);
 	}
 
 	/**
 	 * Gets the Node of this JEPlusProject containing the MVI file name
 	 * 
 	 * @return an XML Node
-	 * @throws XPathExpressionException
 	 */
-	protected Node getMVINode() throws XPathExpressionException {
-		XPathFactory xPathfactory = XPathFactory.newInstance();
-		XPath xpath = xPathfactory.newXPath();
-		XPathExpression expr = xpath
-				.compile("//void[@property=\"RVIFile\"]//string");
-		NodeList nl = (NodeList) expr.evaluate(jep, XPathConstants.NODESET);
-		return nl.item(0);
+	protected Node getMVINode() {
+		String query = "//void[@property=\"RVIFile\"]//string";
+		return getSingleNode(query);
 	}
 
 	/**
@@ -116,7 +154,6 @@ public class JEPlusProject {
 		Node n = getIDFNode().getFirstChild();
 		n.setNodeValue(idf);
 	}
-	
 
 	/**
 	 * Sets the name of the MVI file for this JEPlusProject

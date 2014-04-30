@@ -22,7 +22,7 @@ public class JEPlusProjectTest {
 
 	@Before
 	public void setUp() throws Exception {
-		project = new JEPlusProject(null, null);
+		project = new JEPlusProject();
 		project.loadTemplate();
 	}
 
