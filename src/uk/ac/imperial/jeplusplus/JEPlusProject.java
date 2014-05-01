@@ -45,7 +45,7 @@ public class JEPlusProject {
 		}
 	}
 
-	public JEPlusProject(File idf, File mvi) {
+	public JEPlusProject(File idf, File mvi, File weather) {
 		this();
 		if (idf == null || mvi == null) {
 			throw new IllegalArgumentException("idf and mvi must be non-null");
@@ -53,6 +53,7 @@ public class JEPlusProject {
 		try {
 			setIDFName(idf.getName());
 			setMVIName(mvi.getName());
+			setWeatherName(weather.getName());
 			setNotes("jEPlus E+ v80 example");
 		} catch (XPathExpressionException e) {
 			System.err.println("Unable to set attributes.  Quitting");
