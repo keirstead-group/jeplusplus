@@ -9,8 +9,8 @@ public class JEPlusSchedule {
 
 	private File output;
 	private static int HOURS = 8760;
-	private static int resolution = 60;
-	private double[] values = new double[HOURS * resolution];
+	protected static int RESOLUTION = 60;
+	protected double[] values = new double[HOURS * RESOLUTION];
 
 	public JEPlusSchedule(File output) {
 		this.output = output;
@@ -25,7 +25,7 @@ public class JEPlusSchedule {
 	public String getHeader() {
 		return String
 				.format("# Schedule data for jEPlus at one-minute resolution, must contain %d*%d rows",
-						HOURS, resolution);
+						HOURS, RESOLUTION);
 	}
 
 	public void writeToFile() {
