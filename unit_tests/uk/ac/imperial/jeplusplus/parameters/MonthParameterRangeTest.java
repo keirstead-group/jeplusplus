@@ -8,7 +8,7 @@ import org.junit.Test;
 
 public class MonthParameterRangeTest {
 
-	ParameterRange mpr;
+	MonthParameterRange mpr;
 
 	@Before
 	public void setUp() throws Exception {

@@ -9,7 +9,7 @@ package uk.ac.imperial.jeplusplus.parameters;
  * @author admin
  * 
  */
-public abstract class ParameterRange {
+public abstract class ParameterRange<V> {
 
 	/**
 	 * Gets the index value corresponding to a specified object within this
@@ -22,7 +22,7 @@ public abstract class ParameterRange {
 	 * 
 	 * @throws IllegalArgumentException if o is an invalid object for this ParameterRange
 	 */
-	public int getFixedParameterValue(Object o) throws IllegalArgumentException {
+	public int getFixedParameterValue(V o) throws IllegalArgumentException {
 		if (isValid(o)) {
 			return getObjectIndex(o);
 		} else {
@@ -31,7 +31,9 @@ public abstract class ParameterRange {
 		}
 	}
 	
-	protected abstract int getObjectIndex(Object o);
+	protected abstract int getObjectIndex(V o);
 
-	public abstract boolean isValid(Object o);
+	public abstract boolean isValid(V o);
+	
+	public abstract V[] getValues();
 }
