@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -36,11 +38,13 @@ import org.xml.sax.SAXException;
 public class JEPlusProject {
 
 	private Document jep;
+	private ArrayList<File> files;
 
 	/**
 	 * Creates a new JEPlusProject
 	 */
 	protected JEPlusProject() {
+		files = new ArrayList<File>();
 	}
 
 	/**
@@ -61,6 +65,8 @@ public class JEPlusProject {
 		File idf = getSingleFile(idfFiles);
 		File mvi = getSingleFile(mviFiles);
 		File epw = getSingleFile(epwFiles);
+		
+		addFiles(jep, idf, mvi, epw);
 
 		try {
 			loadTemplate(jep);
@@ -72,6 +78,24 @@ public class JEPlusProject {
 			System.err.println("Unable to set attributes.  Quitting");
 			System.exit(1);
 		}
+	}
+
+	/**
+	 * Adds an external file to this JEPlusProject.
+	 * <p>
+	 * Users can specify parameters within the IMF file (and possibly other
+	 * files) from external files. This method allows you to specify which files
+	 * should be considered part of the project and therefore copy them to the
+	 * working directory for analysis.
+	 * 
+	 * @param files
+	 *            one or more File objects that will be copied into the working
+	 *            directory when running
+	 */
+	public void addFiles(File... files) {
+		for (File f: files) {
+			this.files.add(f);
+		}		
 	}
 
 	/**
@@ -360,4 +384,10 @@ public class JEPlusProject {
 			return null;
 		}
 	}
+
+	
+	public Collection<File> getProjectFiles() {
+		return files;
+	}
+
 }

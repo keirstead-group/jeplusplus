@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Collection;
 
 import org.apache.commons.io.FileUtils;
 
@@ -112,15 +113,17 @@ public class JEPlusController {
 	public void runJob(JEPlusProject project, File config, JEPlusSampler samples)
 			throws IOException {
 
+		// Add the config file to the project
 		if (!config.exists())
 			throw new FileNotFoundException(config.getCanonicalPath());
+		project.addFiles(config);
 		
 		// Copy everything to a directory without spaces
 		File tmpDir = FileUtils.getTempDirectory();
 		tmpDir = new File(tmpDir, "jeplusC");
-		
-		// Copy everything to the new directory
-		FileUtils.copyDirectory(config.getParentFile(), tmpDir);
+		Collection<File> files = project.getProjectFiles();
+		for (File f : files)
+			FileUtils.copyFileToDirectory(f, tmpDir);
 		
 		// Tweak the job and config files to reflect this new path
 		File tmpConfig = new File(tmpDir, config.getName());
