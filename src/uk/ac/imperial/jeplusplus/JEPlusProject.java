@@ -1,10 +1,12 @@
 package uk.ac.imperial.jeplusplus;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.file.Path;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -20,6 +22,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -39,13 +42,40 @@ public class JEPlusProject {
 	protected JEPlusProject() {
 		try {
 			loadTemplate();
+			setNotes("jEPlus E+ v80 example");
 		} catch (Exception e) {
 			System.err.println("Unable to find project template. Quitting.");
 			System.exit(1);
 		}
 	}
 
-	public JEPlusProject(File idf, File mvi) {
+	/**
+	 * Creates a new JEPlusProject from a specified directory. It assumes that
+	 * there is one *.imf, *.mvi, and *.epw file present.
+	 * 
+	 * @param dir a File object giving the directory
+	 */
+	public JEPlusProject(File dir) {
+		this();
+		
+		File[] idfFiles = getFileFilter(dir.toPath(), "*.imf");
+		File[] mviFiles = getFileFilter(dir.toPath(), "*.mvi");
+		File[] epwFiles = getFileFilter(dir.toPath(), "*.epw");
+		File idf = getSingleFile(idfFiles);
+		File mvi = getSingleFile(mviFiles);
+		File epw = getSingleFile(epwFiles);
+
+		try {
+			setIDFName(idf.getName());
+			setMVIName(mvi.getName());
+			setWeatherName(epw.getName());			
+		} catch (XPathExpressionException e) {
+			System.err.println("Unable to set attributes.  Quitting");
+			System.exit(1);
+		}
+	}
+
+	public JEPlusProject(File idf, File mvi, File epw) {
 		this();
 		if (idf == null || mvi == null) {
 			throw new IllegalArgumentException("idf and mvi must be non-null");
@@ -53,7 +83,7 @@ public class JEPlusProject {
 		try {
 			setIDFName(idf.getName());
 			setMVIName(mvi.getName());
-			setNotes("jEPlus E+ v80 example");
+			setWeatherName(epw.getName());			
 		} catch (XPathExpressionException e) {
 			System.err.println("Unable to set attributes.  Quitting");
 			System.exit(1);
@@ -74,7 +104,7 @@ public class JEPlusProject {
 			StringWriter writer = new StringWriter();
 			transformer.transform(new DOMSource(jep), new StreamResult(writer));
 			String output = writer.getBuffer().toString();
-			
+
 			PrintWriter pw = new PrintWriter(file);
 			pw.println(output);
 			pw.close();
@@ -230,4 +260,33 @@ public class JEPlusProject {
 	 * actually be changed.
 	 */
 
+	/**
+	 * Gets a list of files from a directory matching a pattern
+	 * 
+	 * @param path
+	 *            a Path object specifying the directory to search
+	 * @param string
+	 *            a String giving the search pattern
+	 * 
+	 * @return an Array of matching File objects
+	 */
+	private File[] getFileFilter(Path path, String string) {
+		File dir = path.toFile();
+		FileFilter filter = new WildcardFileFilter(string);
+		return dir.listFiles(filter);
+	}
+	
+	/**
+	 * Gets a single file from an Array of File objects. If the array contains
+	 * more than one file, a warning is generated and the first file returned.
+	 * 
+	 * @param files
+	 * @return
+	 */
+	private File getSingleFile(File[] files) {
+		if (files.length!=1) {
+			System.out.println(String.format("Expected 1 file; found %d.  Returning first match.", files.length));			
+		}
+		return files[0];		
+	}
 }
