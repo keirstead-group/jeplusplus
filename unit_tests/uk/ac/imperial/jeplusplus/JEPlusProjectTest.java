@@ -24,7 +24,7 @@ public class JEPlusProjectTest {
 	@Before
 	public void setUp() throws Exception {
 		project = new JEPlusProject();
-		File template = new File("D:/jkeirste/outputs/papers/101 - GRC 2015/code/scenarios/baseline/jeplus/demo/HVACTemplate-5ZoneFanCoil.jep");
+		File template = new File("demo/HVACTemplate-5ZoneFanCoil.jep");
 		project.loadTemplate(template);
 	}
 
@@ -34,7 +34,7 @@ public class JEPlusProjectTest {
 
 	@Test
 	public void testWriteToFile() {
-		project.writeToFile(new File("D:/jkeirste/outputs/papers/101 - GRC 2015/code/scenarios/baseline/jeplus/input/hello.jep"));
+		project.writeToFile(new File("demo/hello.jep"));
 	}
 	
 	@Test
