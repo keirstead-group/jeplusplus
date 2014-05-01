@@ -31,7 +31,22 @@ public abstract class ParameterRange<V> {
 		}
 	}
 	
-	protected abstract int getObjectIndex(V o);
+	/**
+	 * Note that these are 1 indexed
+	 * @param o
+	 * @return
+	 */
+	private int getObjectIndex(V o) {
+		V[] vals = getValues();
+		
+		for (int i=0; i<vals.length; i++) {
+			if (o.equals(vals[i])) {
+				return i+1;
+			}
+		}
+		
+		return 0;
+	}
 
 	public boolean isValid(V o) {
 		V[] vals = getValues();

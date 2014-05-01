@@ -22,7 +22,7 @@ public class MonthParameterRangeTest {
 	@Test
 	public void testGetObjectIndex() {
 		for (int i = 1; i <= 12; i++)
-			assertEquals(i, mpr.getObjectIndex(i));
+			assertEquals(i, mpr.getFixedParameterValue(i));
 	}
 
 	@Test
