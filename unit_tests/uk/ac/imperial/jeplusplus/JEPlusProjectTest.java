@@ -16,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class JEPlusProjectTest {
 
@@ -37,7 +38,7 @@ public class JEPlusProjectTest {
 		project.writeToFile(new File("demo/hello.jep"));
 	}
 	
-	@Test
+
 	public void testLoadTemplate() {
 		try {
 			Document doc = project.getProjectXML();
@@ -115,5 +116,30 @@ public class JEPlusProjectTest {
 		project.setWeatherName(weather);
 		Node n = project.getWeatherNode();
 		assertEquals(weather, n.getFirstChild().getNodeValue());
+	}
+	
+	@Test
+	public void testGetParameterNode() {
+		Node n = project.getParameterNode("ParameterItem2");
+		NodeList nl = n.getChildNodes();
+		for (int i =0; i<nl.getLength(); i++) {
+			n = nl.item(i);
+			System.out.print(i + " = " + n);			
+			System.out.println(nl.item(i).getTextContent());
+		}
+	}
+	
+	@Test
+	public void testGetFixedParameterValue() {		
+		int value = project.getFixedParameterValue("ParameterItem2");
+		assertEquals(1, value);
+	}
+	
+	@Test
+	public void testSetParameterNode() {
+		
+		project.setFixedParameterValue("ParameterItem2", 3);
+		assertEquals(3, project.getFixedParameterValue("ParameterItem2"));
+
 	}
 }

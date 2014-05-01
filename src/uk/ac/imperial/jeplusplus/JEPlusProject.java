@@ -34,25 +34,25 @@ import org.xml.sax.SAXException;
  * 
  */
 public class JEPlusProject {
-	
+
 	private Document jep;
 
-	
 	/**
 	 * Creates a new JEPlusProject
 	 */
-	protected JEPlusProject() {		
+	protected JEPlusProject() {
 	}
-	
+
 	/**
 	 * Creates a new JEPlusProject from a specified directory. It assumes that
 	 * there is one *.jep, *.imf, *.mvi, and *.epw file present.
 	 * 
-	 * @param dir a File object giving the directory
+	 * @param dir
+	 *            a File object giving the directory
 	 */
 	public JEPlusProject(File dir) {
 		this();
-		
+
 		File[] jepFiles = getFileFilter(dir.toPath(), "*.jep");
 		File[] idfFiles = getFileFilter(dir.toPath(), "*.imf");
 		File[] mviFiles = getFileFilter(dir.toPath(), "*.mvi");
@@ -66,7 +66,7 @@ public class JEPlusProject {
 			loadTemplate(jep);
 			setIDFName(idf.getName());
 			setMVIName(mvi.getName());
-			setWeatherName(epw.getName());	
+			setWeatherName(epw.getName());
 			setNotes("jEPlus E+ v80 example");
 		} catch (Exception e) {
 			System.err.println("Unable to set attributes.  Quitting");
@@ -105,14 +105,14 @@ public class JEPlusProject {
 	 * @throws IOException
 	 * @throws SAXException
 	 */
-	protected void loadTemplate(File template) throws ParserConfigurationException,
-			SAXException, IOException {
+	protected void loadTemplate(File template)
+			throws ParserConfigurationException, SAXException, IOException {
 
 		// Load the template
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		jep = dBuilder.parse(template);
-		
+
 		// optional, but recommended
 		// read this -
 		// http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
@@ -255,7 +255,7 @@ public class JEPlusProject {
 		FileFilter filter = new WildcardFileFilter(string);
 		return dir.listFiles(filter);
 	}
-	
+
 	/**
 	 * Gets a single file from an Array of File objects. If the array contains
 	 * more than one file, a warning is generated and the first file returned.
@@ -264,9 +264,100 @@ public class JEPlusProject {
 	 * @return
 	 */
 	private File getSingleFile(File[] files) {
-		if (files.length!=1) {
-			System.out.println(String.format("Expected 1 file; found %d.  Returning first match.", files.length));			
+		if (files.length != 1) {
+			System.out.println(String.format(
+					"Expected 1 file; found %d.  Returning first match.",
+					files.length));
 		}
-		return files[0];		
+		return files[0];
+	}
+
+	/**
+	 * Sets the value of a fixed parameter within this JEPlusProject
+	 * 
+	 * @param name
+	 *            a String giving the parameter name, e.g. "@@weekday@@"
+	 * @param value
+	 *            the value to be fixed. Corresponds to the index within the
+	 *            specified parameter list.
+	 */
+	public void setFixedParameterValue(String name, int value) {
+		Node n = getFixedParameterNode(name);
+		n.getFirstChild().setNodeValue(String.valueOf(value));
+	}
+
+	/**
+	 * Gets the index of the fixed parameter value. The user needs to know what
+	 * order the parameters are specified in and then use this accordingly.
+	 * 
+	 * @param name
+	 * @return
+	 */
+	protected int getFixedParameterValue(String name) {
+		Node n = getFixedParameterNode(name);
+		int value = Integer.valueOf(n.getFirstChild().getNodeValue());
+		return value;
+	}
+
+	/**
+	 * Gets the value node for the fixed parameter value
+	 * 
+	 * @param name
+	 *            the parameter name
+	 * @return the node containing the index value
+	 */
+	protected Node getFixedParameterNode(String name) {
+		Node n = getParameterNode(name);
+		try {
+			String query = "void[@property=\"selectedAltValue\"]";
+			XPathFactory xPathfactory = XPathFactory.newInstance();
+			XPath xpath = xPathfactory.newXPath();
+			XPathExpression expr;
+			expr = xpath.compile(query);
+			NodeList nl = (NodeList) expr.evaluate(n, XPathConstants.NODESET);
+			if (nl.getLength() == 1) {
+				return nl.item(0).getChildNodes().item(1);
+			}
+		} catch (XPathExpressionException e) {
+
+		}
+		return null;
+	}
+
+	/**
+	 * Gets a named ParameterNode from this JEPlusProject.
+	 * <p>
+	 * Unfortunately there is no easy way to do this query. At the moment, you
+	 * have to pass it the full name of the node id which can be found by
+	 * manually inspecting the *.jep file. With a simple tree: <code>
+	 * root > param1 > param2 > param3
+	 * </code> you would find the node param2 by searching with
+	 * <code>name=ParameterItem2</code>.
+	 * 
+	 * @param name
+	 *            the id field of the Node as described above.
+	 * 
+	 * @return the Node if found; else 0.
+	 */
+	protected Node getParameterNode(String name) {
+		try {
+			String query = String.format("//object[@id='%s']", name);
+			XPathFactory xPathfactory = XPathFactory.newInstance();
+			XPath xpath = xPathfactory.newXPath();
+			XPathExpression expr;
+			expr = xpath.compile(query);
+			NodeList nl = (NodeList) expr.evaluate(jep, XPathConstants.NODESET);
+
+			if (nl.getLength() == 1) {
+				return nl.item(0);
+			} else {
+				System.out.println(String.format(
+						"%d nodes found matching '%s'.  Returning null",
+						nl.getLength(), query));
+				return null;
+			}
+		} catch (XPathExpressionException e) {
+			return null;
+		}
 	}
 }
