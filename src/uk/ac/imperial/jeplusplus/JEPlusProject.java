@@ -3,11 +3,17 @@ package uk.ac.imperial.jeplusplus;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -47,7 +53,7 @@ public class JEPlusProject {
 		try {
 			setIDFName(idf.getName());
 			setMVIName(mvi.getName());
-			// setNotes("jEPlus E+ v80 example");
+			setNotes("jEPlus E+ v80 example");
 		} catch (XPathExpressionException e) {
 			System.err.println("Unable to set attributes.  Quitting");
 			System.exit(1);
@@ -58,7 +64,23 @@ public class JEPlusProject {
 	/**
 	 * Writes this jePlusProject to file
 	 */
-	public void writeToFile(File jep) {
+	public void writeToFile(File file) {
+
+		TransformerFactory tf = TransformerFactory.newInstance();
+		Transformer transformer;
+		try {
+			transformer = tf.newTransformer();
+			transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, "yes");
+			StringWriter writer = new StringWriter();
+			transformer.transform(new DOMSource(jep), new StreamResult(writer));
+			String output = writer.getBuffer().toString();
+			
+			PrintWriter pw = new PrintWriter(file);
+			pw.println(output);
+			pw.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 
@@ -171,7 +193,8 @@ public class JEPlusProject {
 	/**
 	 * Sets the project notes
 	 * 
-	 * @param notes	a String giving the project notes.
+	 * @param notes
+	 *            a String giving the project notes.
 	 * 
 	 */
 	public void setNotes(String notes) {
@@ -182,7 +205,7 @@ public class JEPlusProject {
 	protected Node getNotesNode() {
 		return getSingleNode("//void[@property=\"projectNotes\"]//string");
 	}
-	
+
 	/**
 	 * Sets the name of the weather file for this JEPlusProject
 	 * 
@@ -196,8 +219,15 @@ public class JEPlusProject {
 		n.getFirstChild().setNodeValue(weather);
 	}
 
-	
 	protected Node getWeatherNode() {
 		return getSingleNode("//void[@property=\"weatherFile\"]//string");
 	}
+
+	/*
+	 * TODO To set a parameter you need a well-defined template
+	 * ("searchString"). Then just find the "valuesString" that follows and set
+	 * the fixed value as necessary. That will leave just some of the values to
+	 * actually be changed.
+	 */
+
 }

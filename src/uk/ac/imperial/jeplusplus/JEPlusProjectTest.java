@@ -2,6 +2,7 @@ package uk.ac.imperial.jeplusplus;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.io.StringWriter;
 
 import javax.xml.transform.OutputKeys;
@@ -30,6 +31,11 @@ public class JEPlusProjectTest {
 	public void tearDown() throws Exception {
 	}
 
+	@Test
+	public void testWriteToFile() {
+		project.writeToFile(new File("D:/jkeirste/outputs/papers/101 - GRC 2015/code/scenarios/baseline/jeplus/input/hello.jep"));
+	}
+	
 	@Test
 	public void testLoadTemplate() {
 		try {
