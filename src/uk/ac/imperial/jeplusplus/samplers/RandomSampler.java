@@ -28,7 +28,7 @@ public class RandomSampler extends JEPlusSampler {
 	 */
 	public RandomSampler(int n, int seed) {
 		this(n);
-		seed = new Integer(seed);
+		this.seed = new Integer(seed);
 	}
 	
 	@Override
@@ -37,7 +37,7 @@ public class RandomSampler extends JEPlusSampler {
 		if (seed==null) {
 			s = String.format("%s %d", getFlag(), nSamples);
 		} else {
-			s = String.format("%s %d -seed %d", getFlag(), nSamples, seed.toString());
+			s = String.format("%s %d -seed %s", getFlag(), nSamples, seed.toString());
 		}
 		return s;
 	}
