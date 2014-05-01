@@ -33,7 +33,17 @@ public abstract class ParameterRange<V> {
 	
 	protected abstract int getObjectIndex(V o);
 
-	public abstract boolean isValid(V o);
+	public boolean isValid(V o) {
+		V[] vals = getValues();
+
+		for (int i = 0; i < vals.length; i++) {
+			if (o.equals(vals[i]))
+				return true;
+		}
+
+		return false;
+	}
 	
 	public abstract V[] getValues();
+	
 }
