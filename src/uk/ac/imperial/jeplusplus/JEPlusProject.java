@@ -3,7 +3,6 @@ package uk.ac.imperial.jeplusplus;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Path;
@@ -35,60 +34,44 @@ import org.xml.sax.SAXException;
  * 
  */
 public class JEPlusProject {
-
-	private static String JEP_TEMPLATE = "/resources/template.jep";
+	
 	private Document jep;
 
-	protected JEPlusProject() {
-		try {
-			loadTemplate();
-			setNotes("jEPlus E+ v80 example");
-		} catch (Exception e) {
-			System.err.println("Unable to find project template. Quitting.");
-			System.exit(1);
-		}
+	
+	/**
+	 * Creates a new JEPlusProject
+	 */
+	protected JEPlusProject() {		
 	}
-
+	
 	/**
 	 * Creates a new JEPlusProject from a specified directory. It assumes that
-	 * there is one *.imf, *.mvi, and *.epw file present.
+	 * there is one *.jep, *.imf, *.mvi, and *.epw file present.
 	 * 
 	 * @param dir a File object giving the directory
 	 */
 	public JEPlusProject(File dir) {
 		this();
 		
+		File[] jepFiles = getFileFilter(dir.toPath(), "*.jep");
 		File[] idfFiles = getFileFilter(dir.toPath(), "*.imf");
 		File[] mviFiles = getFileFilter(dir.toPath(), "*.mvi");
 		File[] epwFiles = getFileFilter(dir.toPath(), "*.epw");
+		File jep = getSingleFile(jepFiles);
 		File idf = getSingleFile(idfFiles);
 		File mvi = getSingleFile(mviFiles);
 		File epw = getSingleFile(epwFiles);
 
 		try {
+			loadTemplate(jep);
 			setIDFName(idf.getName());
 			setMVIName(mvi.getName());
-			setWeatherName(epw.getName());			
-		} catch (XPathExpressionException e) {
+			setWeatherName(epw.getName());	
+			setNotes("jEPlus E+ v80 example");
+		} catch (Exception e) {
 			System.err.println("Unable to set attributes.  Quitting");
 			System.exit(1);
 		}
-	}
-
-	public JEPlusProject(File idf, File mvi, File epw) {
-		this();
-		if (idf == null || mvi == null) {
-			throw new IllegalArgumentException("idf and mvi must be non-null");
-		}
-		try {
-			setIDFName(idf.getName());
-			setMVIName(mvi.getName());
-			setWeatherName(epw.getName());			
-		} catch (XPathExpressionException e) {
-			System.err.println("Unable to set attributes.  Quitting");
-			System.exit(1);
-		}
-
 	}
 
 	/**
@@ -122,21 +105,18 @@ public class JEPlusProject {
 	 * @throws IOException
 	 * @throws SAXException
 	 */
-	protected void loadTemplate() throws ParserConfigurationException,
+	protected void loadTemplate(File template) throws ParserConfigurationException,
 			SAXException, IOException {
 
 		// Load the template
-		InputStream template = this.getClass()
-				.getResourceAsStream(JEP_TEMPLATE);
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		jep = dBuilder.parse(template);
-
+		
 		// optional, but recommended
 		// read this -
 		// http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
 		jep.getDocumentElement().normalize();
-
 	}
 
 	public Document getProjectXML() {
