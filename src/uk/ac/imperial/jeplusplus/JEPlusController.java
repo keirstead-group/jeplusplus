@@ -109,14 +109,11 @@ public class JEPlusController {
 	 * @throws IOException
 	 * 
 	 */
-	public void runJob(File job, File config, JEPlusSampler samples)
+	public void runJob(JEPlusProject project, File config, JEPlusSampler samples)
 			throws IOException {
 
 		if (!config.exists())
 			throw new FileNotFoundException(config.getCanonicalPath());
-
-		if (!config.getParent().equals(job.getParent())) 
-			throw new IllegalArgumentException("Expecting config and job to be in the same directory.");
 		
 		// Copy everything to a directory without spaces
 		File tmpDir = FileUtils.getTempDirectory();
@@ -127,8 +124,9 @@ public class JEPlusController {
 		
 		// Tweak the job and config files to reflect this new path
 		File tmpConfig = new File(tmpDir, config.getName());
-		File tmpJob = new File(tmpDir, job.getName());
+		File tmpJob = new File(tmpDir, "project.jep");
 		File tmpOutput = new File(tmpDir, outdir.getName());
+		project.writeToFile(tmpJob);
 		
 		String cmd = String.format("-job %s %s -cfg %s -output %s",
 				tmpJob.toString(), samples.toString(), tmpConfig.toString(),
