@@ -14,27 +14,33 @@ public class OccupancySchedule extends JEPlusSchedule {
 		super(output);
 	}
 
+	/**
+	 * Sets an occupancy schedule assuming that the values provided repeat for
+	 * every day of the year.
+	 * 
+	 * @param values
+	 *            an array of occupancy values. No assumption is made on the
+	 *            range of these values; it is up to the user to ensure that
+	 *            they are appropriate for the type of EnergyPlus Schedule
+	 *            object being modelled.
+	 */
 	public void setDailyOccupancy(double[] values) {
-		
+
 		int expectedValues = JEPlusSchedule.RESOLUTION * 24;
-		if (values.length!=(expectedValues)) {
-			String msg = String.format("values must be an array of length %d; %d values provided", expectedValues, values.length);
+		if (values.length != (expectedValues)) {
+			String msg = String.format(
+					"values must be an array of length %d; %d values provided",
+					expectedValues, values.length);
 			throw new IllegalArgumentException(msg);
 		}
-		
-		for (int i = 0; i < values.length; i++) {
-			if (values[i]<0 || values[i]>1) { 
-				String msg = String.format("Value %s out of range [0,1]", values[i]);
-				throw new IllegalArgumentException(msg);
-			}
-		}
+
 		// Repeat the same schedule for each day
-		for (int i = 0; i<365; i++) {
-			
+		for (int i = 0; i < 365; i++) {
+
 			// Place the values in the array
 			for (int j = 0; j < values.length; j++) {
-				
-				int index = i*values.length +j; 
+
+				int index = i * values.length + j;
 				this.values[index] = values[j];
 			}
 		}
