@@ -157,4 +157,15 @@ public class JEPlusProjectTest {
 			fail(e.getMessage());			
 		}
 	}
+	
+	@Test
+	public void testScaleResults() {		
+		project = new JEPlusProject(new File("demo"));
+		try {
+			project.run();
+			project.scaleResults(2);
+		} catch (IOException e) {
+			fail(e.getMessage());			
+		}
+	}
 }

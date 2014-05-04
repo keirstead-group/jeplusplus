@@ -1,14 +1,21 @@
 package uk.ac.imperial.jeplusplus;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,6 +37,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import au.com.bytecode.opencsv.CSVReader;
+import au.com.bytecode.opencsv.CSVWriter;
 import uk.ac.imperial.jeplusplus.samplers.JEPlusSampler;
 import uk.ac.imperial.jeplusplus.samplers.RandomSampler;
 
@@ -415,6 +424,55 @@ public class JEPlusProject {
 		File config = dir.resolve("jeplus_v80.cfg").toFile();
 		JEPlusSampler sampler = new RandomSampler(1);
 		controller.runJob(this, config, sampler);
+
+	}
+
+	/**
+	 * Scales the JEPlus results by a multiplicative factor. All columns in the
+	 * JEPlus output file will be scaled.
+	 * 
+	 * @param factor
+	 *            a scaling factor
+	 * @throws FileNotFoundException
+	 *             if unable to find the results file
+	 * @throw IOException if unable to write the scaled results
+	 */
+	public void scaleResults(double factor) throws IOException {
+
+		Path jePlusOutDir = dir.resolve("output");
+		File rawFile = jePlusOutDir.resolve("SimResults.csv").toFile();
+
+		if (!rawFile.exists()) {
+			throw new FileNotFoundException("Unable to find the results file.");
+		}
+
+		// Load the results
+		InputStream is = new FileInputStream(rawFile);
+		CSVReader reader = new CSVReader(new InputStreamReader(is));
+		List<String[]> rawLines = reader.readAll();
+		reader.close();
+
+		// Write the results to the new file applying the scaling
+		int nHeaderRows = 1;
+		File scaledFile = jePlusOutDir.resolve("SimResults-scaled.csv")
+				.toFile();
+		Writer output = new BufferedWriter(new FileWriter(scaledFile));
+		CSVWriter writer = new CSVWriter(output);
+		int lineCount = 0;
+		for (String[] s : rawLines) {
+			lineCount++;
+			if (lineCount <= nHeaderRows) {
+				writer.writeNext(s);
+			} else {
+				double elec = Double.valueOf(s[3]);
+				s[3] = String.valueOf(elec * factor);
+				double gas = Double.valueOf(s[4]);
+				s[4] = String.valueOf(gas * factor);
+				writer.writeNext(s);
+			}
+		}
+		writer.close();
+
 	}
 
 }
