@@ -3,6 +3,7 @@ package uk.ac.imperial.jeplusplus;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.StringWriter;
 
 import javax.xml.transform.OutputKeys;
@@ -35,7 +36,11 @@ public class JEPlusProjectTest {
 
 	@Test
 	public void testWriteToFile() {
-		project.writeToFile(new File("demo/hello.jep"));
+		File f = new File("demo/hello.jep");
+		project.writeToFile(f);
+		assertTrue(f.exists());
+		f.delete();
+		
 	}
 	
 
@@ -141,5 +146,15 @@ public class JEPlusProjectTest {
 		project.setFixedParameterValue("ParameterItem2", 3);
 		assertEquals(3, project.getFixedParameterValue("ParameterItem2"));
 
+	}
+	
+	@Test
+	public void testRun() {		
+		project = new JEPlusProject(new File("demo"));
+		try {
+			project.run();
+		} catch (IOException e) {
+			fail(e.getMessage());			
+		}
 	}
 }

@@ -2,6 +2,7 @@ package uk.ac.imperial.jeplusplus;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -29,6 +30,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import uk.ac.imperial.jeplusplus.samplers.JEPlusSampler;
+import uk.ac.imperial.jeplusplus.samplers.RandomSampler;
+
 /**
  * Describes a jEPlus project file
  * 
@@ -39,6 +43,7 @@ public class JEPlusProject {
 
 	private Document jep;
 	private ArrayList<File> files;
+	private Path dir;
 
 	/**
 	 * Creates a new JEPlusProject
@@ -57,6 +62,8 @@ public class JEPlusProject {
 	public JEPlusProject(File dir) {
 		this();
 
+		this.dir = dir.toPath();
+
 		File[] jepFiles = getFileFilter(dir.toPath(), "*.jep");
 		File[] idfFiles = getFileFilter(dir.toPath(), "*.imf");
 		File[] mviFiles = getFileFilter(dir.toPath(), "*.mvi");
@@ -65,7 +72,7 @@ public class JEPlusProject {
 		File idf = getSingleFile(idfFiles);
 		File mvi = getSingleFile(mviFiles);
 		File epw = getSingleFile(epwFiles);
-		
+
 		addFiles(jep, idf, mvi, epw);
 
 		try {
@@ -93,9 +100,9 @@ public class JEPlusProject {
 	 *            directory when running
 	 */
 	public void addFiles(File... files) {
-		for (File f: files) {
+		for (File f : files) {
 			this.files.add(f);
-		}		
+		}
 	}
 
 	/**
@@ -385,9 +392,29 @@ public class JEPlusProject {
 		}
 	}
 
-	
 	public Collection<File> getProjectFiles() {
 		return files;
+	}
+
+	/**
+	 * Runs this JEPlusProject.
+	 * <p>
+	 * This method will call jEPlus and run the project.
+	 * 
+	 * @throws IOException
+	 * @throws FileNotFoundException
+	 * 
+	 */
+	public void run() throws FileNotFoundException, IOException {
+
+		// Where do we want the results to be saved?
+		File outdir = dir.resolve("output").toFile();
+
+		// Define the controllers and run the job
+		JEPlusController controller = new JEPlusController(outdir);
+		File config = dir.resolve("jeplus_v80.cfg").toFile();
+		JEPlusSampler sampler = new RandomSampler(1);
+		controller.runJob(this, config, sampler);
 	}
 
 }
