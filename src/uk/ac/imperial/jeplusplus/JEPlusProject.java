@@ -464,10 +464,10 @@ public class JEPlusProject {
 			if (lineCount <= nHeaderRows) {
 				writer.writeNext(s);
 			} else {
-				double elec = Double.valueOf(s[3]);
-				s[3] = String.valueOf(elec * factor);
-				double gas = Double.valueOf(s[4]);
-				s[4] = String.valueOf(gas * factor);
+				for (int i = 3; i<s.length; i++) {
+					double val = Double.valueOf(s[i]);
+					s[i] = String.valueOf(val * factor);
+				}
 				writer.writeNext(s);
 			}
 		}
