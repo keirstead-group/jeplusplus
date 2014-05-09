@@ -35,7 +35,7 @@ public class JEPlusSchedule {
 			pw.println(getHeader());
 
 			for (int i = 0; i < values.length; i++) {
-				pw.println(String.format("%s,", values[i]));
+				pw.println(String.format("%.4f,", values[i]));
 			}
 			pw.close();
 		} catch (Exception e) {
