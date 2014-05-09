@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Collection;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 
@@ -21,6 +22,8 @@ import uk.ac.imperial.jeplusplus.samplers.JEPlusSampler;
  */
 public class JEPlusController {
 
+	private static Logger log = Logger.getLogger(JEPlusController.class.getName());
+	
 	private final static String JAR_PATH = "d:/software/jEPlus_v1.5_pre_05/jEPlus.jar";
 	private final static String CMD_TEMPLATE = "java -jar %s %s";
 	private File outdir;
@@ -56,14 +59,14 @@ public class JEPlusController {
 
 		// Build the template
 		cmd = String.format(CMD_TEMPLATE, JAR_PATH, cmd);
-		System.out.println(String.format("Running jEPlus with options '%s'",
+		log.info(String.format("Running jEPlus with options '%s'",
 				cmd));
 
 		if (!outdir.exists()) outdir.mkdirs();
 		
 		// Create the log
-		File log = new File(outdir, "console.log");
-		PrintWriter bw = new PrintWriter(new FileWriter(log));
+		File logFile = new File(outdir, "console.log");
+		PrintWriter bw = new PrintWriter(new FileWriter(logFile));
 
 		Process p;
 		try {
@@ -83,7 +86,7 @@ public class JEPlusController {
 			e.printStackTrace();
 		}
 
-		System.out.println("jEPlus complete.");
+		log.fine("jEPlus complete.");
 
 	}
 

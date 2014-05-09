@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -49,6 +50,8 @@ import uk.ac.imperial.jeplusplus.samplers.RandomSampler;
  * 
  */
 public class JEPlusProject {
+
+	private static Logger log = Logger.getLogger(JEPlusProject.class.getName());
 
 	private Document jep;
 	private ArrayList<File> files;
@@ -91,7 +94,7 @@ public class JEPlusProject {
 			setWeatherName(epw.getName());
 			setNotes("jEPlus E+ v80 example");
 		} catch (Exception e) {
-			System.err.println("Unable to set attributes.  Quitting");
+			log.severe("Unable to set attributes.  Quitting");
 			System.exit(1);
 		}
 	}
@@ -183,9 +186,10 @@ public class JEPlusProject {
 			if (nl.getLength() == 1) {
 				return nl.item(0);
 			} else {
-				System.out.println(String.format(
+				String msg = String.format(
 						"%d nodes found matching '%s'.  Returning null",
-						nl.getLength(), query));
+						nl.getLength(), query);
+				log.warning(msg);
 				return null;
 			}
 		} catch (XPathExpressionException e) {
@@ -273,13 +277,6 @@ public class JEPlusProject {
 		return getSingleNode("//void[@property=\"weatherFile\"]//string");
 	}
 
-	/*
-	 * TODO To set a parameter you need a well-defined template
-	 * ("searchString"). Then just find the "valuesString" that follows and set
-	 * the fixed value as necessary. That will leave just some of the values to
-	 * actually be changed.
-	 */
-
 	/**
 	 * Gets a list of files from a directory matching a pattern
 	 * 
@@ -305,7 +302,7 @@ public class JEPlusProject {
 	 */
 	private File getSingleFile(File[] files) {
 		if (files.length != 1) {
-			System.out.println(String.format(
+			log.warning(String.format(
 					"Expected 1 file; found %d.  Returning first match.",
 					files.length));
 		}
@@ -391,7 +388,7 @@ public class JEPlusProject {
 			if (nl.getLength() == 1) {
 				return nl.item(0);
 			} else {
-				System.out.println(String.format(
+				log.warning(String.format(
 						"%d nodes found matching '%s'.  Returning null",
 						nl.getLength(), query));
 				return null;
@@ -464,7 +461,7 @@ public class JEPlusProject {
 			if (lineCount <= nHeaderRows) {
 				writer.writeNext(s);
 			} else {
-				for (int i = 3; i<s.length; i++) {
+				for (int i = 3; i < s.length; i++) {
 					double val = Double.valueOf(s[i]);
 					s[i] = String.valueOf(val * factor);
 				}
