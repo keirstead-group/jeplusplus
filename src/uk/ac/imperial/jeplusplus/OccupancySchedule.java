@@ -8,8 +8,14 @@ import java.io.File;
  * @author James Keirstead
  * 
  */
-public class OccupancySchedule extends JEPlusSchedule {
+public class OccupancySchedule extends EnergyPlusSchedule {
 
+	/**
+	 * Creates a new OccupancySchedule object
+	 * 
+	 * @param output
+	 *            the output file
+	 */
 	public OccupancySchedule(File output) {
 		super(output);
 	}
@@ -26,7 +32,7 @@ public class OccupancySchedule extends JEPlusSchedule {
 	 */
 	public void setDailyOccupancy(double[] values) {
 
-		int expectedValues = JEPlusSchedule.RESOLUTION * 24;
+		int expectedValues = EnergyPlusSchedule.RESOLUTION * 24;
 		if (values.length != (expectedValues)) {
 			String msg = String.format(
 					"values must be an array of length %d; %d values provided",

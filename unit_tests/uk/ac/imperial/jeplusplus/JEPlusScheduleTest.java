@@ -1,7 +1,5 @@
 package uk.ac.imperial.jeplusplus;
 
-import static org.junit.Assert.*;
-
 import java.io.File;
 
 import org.junit.After;
@@ -10,11 +8,11 @@ import org.junit.Test;
 
 public class JEPlusScheduleTest {
 
-	JEPlusSchedule sched;
+	EnergyPlusSchedule sched;
 	
 	@Before
 	public void setUp() throws Exception {
-		sched = new JEPlusSchedule(new File("schedule.txt"));
+		sched = new EnergyPlusSchedule(new File("schedule.txt"));
 	}
 
 	@After
