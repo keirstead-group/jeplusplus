@@ -29,6 +29,7 @@ public class JEPlusProjectTest {
 	
 	@Before
 	public void setUp() throws Exception {
+		JEPlusController.setJarPath("D:/software/jEPlus_v1.5_pre_05/jEPlus.jar");
 		project = new JEPlusProject();
 		File template = new File("demo/HVACTemplate-5ZoneFanCoil.jep");
 		project.loadTemplate(template);
