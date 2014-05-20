@@ -34,10 +34,8 @@ public class JEPlusController {
 	 * 
 	 * @param out
 	 *            the output directory
-	 * 
-	 * @throws IOException
 	 */
-	public JEPlusController(File out) throws FileNotFoundException, IOException {
+	public JEPlusController(File out) {
 		this.outdir = out;
 	}
 
@@ -48,19 +46,22 @@ public class JEPlusController {
 	 * 
 	 * @param cmd
 	 *            a String giving the arguments to pass to the jEPlus jar
-	 * @param rundir
-	 *            the directory in which to run the jar
+	 * @param working
+	 *            the working directory for jEPlus
 	 * @param outdir
 	 *            the directory in which to store the results
 	 * @throws IOException
-	 *             if there are problems writing the results to File
+	 *             if there are problems writing the results to File or the
+	 *             jEPlus jar file isn't set.
 	 * 
 	 */
-	private void doRun(String cmd, File rundir, File outdir) throws IOException {
+	private void doRun(String cmd, File working, File outdir)
+			throws IOException {
 
-		if (JAR_PATH==null) 
-			throw new IOException("Path to jEPlus jar not set.  Call setJarPath first.");
-		
+		if (JAR_PATH == null)
+			throw new IOException(
+					"Path to jEPlus jar not set.  Call setJarPath first.");
+
 		// Build the template
 		cmd = String.format(CMD_TEMPLATE, JAR_PATH, cmd);
 		log.info(String.format("Running jEPlus with options '%s'", cmd));
@@ -74,7 +75,7 @@ public class JEPlusController {
 
 		Process p;
 		try {
-			p = Runtime.getRuntime().exec(cmd, null, rundir);
+			p = Runtime.getRuntime().exec(cmd, null, working);
 			p.waitFor();
 
 			// Dump the output into the log
