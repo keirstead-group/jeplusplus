@@ -1,12 +1,21 @@
 package uk.ac.imperial.jeplusplus.samplers;
 
+/**
+ * Describes a random sampling method for jEPlus.
+ * 
+ * This method uses naive random sampling. If you want to use Latin hypercube
+ * sampling, then please use {@link LHSSampler} instead.
+ * 
+ * @author James Keirstead
+ * 
+ */
 public class RandomSampler extends JEPlusSampler {
 
 	private int nSamples;
 	private Integer seed = null;
-	
+
 	/**
-	 * Creates a new RandomSamples object specifying the number of samples to
+	 * Creates a new RandomSampler object specifying the number of samples to
 	 * run
 	 * 
 	 * @param n
@@ -18,33 +27,34 @@ public class RandomSampler extends JEPlusSampler {
 	}
 
 	/**
-	 * Creates a new RandomSamples object specifying the number of samples to
+	 * Creates a new RandomSampler object specifying the number of samples to
 	 * run and the random number seed
 	 * 
 	 * @param n
 	 *            a positive integer giving the number of samples to run. If
 	 *            <code>n<=0</code>, the number of samples is set to 1.
-	 * @param seed           
+	 * @param seed
 	 */
 	public RandomSampler(int n, int seed) {
 		this(n);
-		seed = new Integer(seed);
+		this.seed = new Integer(seed);
 	}
-	
+
 	@Override
 	public String toString() {
 		String s = null;
-		if (seed==null) {
+		if (seed == null) {
 			s = String.format("%s %d", getFlag(), nSamples);
 		} else {
-			s = String.format("%s %d -seed %d", getFlag(), nSamples, seed.toString());
+			s = String.format("%s %d -seed %s", getFlag(), nSamples,
+					seed.toString());
 		}
 		return s;
 	}
 
 	/**
-	 * Gets the keyword flag for this RandomSamples object.
-	 *  
+	 * Gets the keyword flag for this RandomSampler object.
+	 * 
 	 * @return -sample
 	 */
 	protected String getFlag() {

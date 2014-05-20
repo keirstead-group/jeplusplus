@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.7.0_51" class="java.beans.XMLDecoder">
+ <object class="jeplus.JEPlusProject">
+  <void property="IDFTemplate">
+   <string>HVACTemplate-5ZoneFanCoil.imf</string>
+  </void>
+  <void property="RVIFile">
+   <string>HVACTemplate-5ZoneFanCoil.mvi</string>
+  </void>
+  <void property="baseDir">
+   <string>D:\software\jEPlus_v1.5_pre_05\GRC-demo\</string>
+  </void>
+  <void property="execSettings">
+   <void property="subSet">
+    <int>2</int>
+   </void>
+  </void>
+  <void property="paramTree">
+   <void id="ParameterItem0" property="userObject">
+    <void class="jeplus.data.ParameterItem" method="getField">
+     <string>Name</string>
+     <void method="set">
+      <object idref="ParameterItem0"/>
+      <string>Orientation</string>
+     </void>
+    </void>
+    <void class="jeplus.data.ParameterItem" method="getField">
+     <string>Description</string>
+     <void method="set">
+      <object idref="ParameterItem0"/>
+      <string>Orientation of the building</string>
+     </void>
+    </void>
+    <void class="jeplus.data.ParameterItem" method="getField">
+     <string>SearchString</string>
+     <void method="set">
+      <object idref="ParameterItem0"/>
+      <string>@@orientation@@</string>
+     </void>
+    </void>
+    <void property="valuesString">
+     <string>[0 :45 :359 ] &amp; {101} ^ {45, 135}</string>
+    </void>
+   </void>
+   <void method="add">
+    <object class="javax.swing.tree.DefaultMutableTreeNode">
+     <void property="userObject">
+      <object class="jeplus.data.ParameterItem" id="ParameterItem1">
+       <void class="jeplus.data.ParameterItem" method="getField">
+        <string>ID</string>
+        <void method="set">
+         <object idref="ParameterItem1"/>
+         <string>P2</string>
+        </void>
+       </void>
+       <void class="jeplus.data.ParameterItem" method="getField">
+        <string>Name</string>
+        <void method="set">
+         <object idref="ParameterItem1"/>
+         <string>Outside Air Rate</string>
+        </void>
+       </void>
+       <void class="jeplus.data.ParameterItem" method="getField">
+        <string>Type</string>
+        <void method="set">
+         <object idref="ParameterItem1"/>
+         <int>1</int>
+        </void>
+       </void>
+       <void class="jeplus.data.ParameterItem" method="getField">
+        <string>Description</string>
+        <void method="set">
+         <object idref="ParameterItem1"/>
+         <string>Outside Air Rate, m3/s/person</string>
+        </void>
+       </void>
+       <void class="jeplus.data.ParameterItem" method="getField">
+        <string>SearchString</string>
+        <void method="set">
+         <object idref="ParameterItem1"/>
+         <string>@@Outside_Air@@</string>
+        </void>
+       </void>
+       <void property="valuesString">
+        <string>@sample(n, 0.008, 0.003, 5)</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="javax.swing.tree.DefaultMutableTreeNode">
+       <void property="userObject">
+        <object class="jeplus.data.ParameterItem" id="ParameterItem2">
+         <void class="jeplus.data.ParameterItem" method="getField">
+          <string>ID</string>
+          <void method="set">
+           <object idref="ParameterItem2"/>
+           <string>P3</string>
+          </void>
+         </void>
+         <void class="jeplus.data.ParameterItem" method="getField">
+          <string>Name</string>
+          <void method="set">
+           <object idref="ParameterItem2"/>
+           <string>Month</string>
+          </void>
+         </void>
+         <void class="jeplus.data.ParameterItem" method="getField">
+          <string>Description</string>
+          <void method="set">
+           <object idref="ParameterItem2"/>
+           <string>Month of the year</string>
+          </void>
+         </void>
+         <void class="jeplus.data.ParameterItem" method="getField">
+          <string>SearchString</string>
+          <void method="set">
+           <object idref="ParameterItem2"/>
+           <string>@@month@@</string>
+          </void>
+         </void>
+         <void property="selectedAltValue">
+          <int>1</int>
+         </void>
+         <void property="valuesString">
+          <string>[ 1 : 1: 12 ]</string>
+         </void>
+        </object>
+       </void>
+       <void method="add">
+        <object class="javax.swing.tree.DefaultMutableTreeNode">
+         <void property="userObject">
+          <object class="jeplus.data.ParameterItem" id="ParameterItem3">
+           <void class="jeplus.data.ParameterItem" method="getField">
+            <string>ID</string>
+            <void method="set">
+             <object idref="ParameterItem3"/>
+             <string>P4</string>
+            </void>
+           </void>
+           <void class="jeplus.data.ParameterItem" method="getField">
+            <string>Name</string>
+            <void method="set">
+             <object idref="ParameterItem3"/>
+             <string>Weekday</string>
+            </void>
+           </void>
+           <void class="jeplus.data.ParameterItem" method="getField">
+            <string>Type</string>
+            <void method="set">
+             <object idref="ParameterItem3"/>
+             <int>2</int>
+            </void>
+           </void>
+           <void class="jeplus.data.ParameterItem" method="getField">
+            <string>Description</string>
+            <void method="set">
+             <object idref="ParameterItem3"/>
+             <string>Day of the week</string>
+            </void>
+           </void>
+           <void class="jeplus.data.ParameterItem" method="getField">
+            <string>SearchString</string>
+            <void method="set">
+             <object idref="ParameterItem3"/>
+             <string>@@weekday@@</string>
+            </void>
+           </void>
+           <void property="selectedAltValue">
+            <int>2</int>
+           </void>
+           <void property="valuesString">
+            <string>{Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday}</string>
+           </void>
+          </object>
+         </void>
+        </object>
+       </void>
+      </object>
+     </void>
+    </object>
+   </void>
+  </void>
+  <void property="projectID">
+   <string>0</string>
+  </void>
+  <void property="projectNotes">
+   <string>jEPlus E+ v80 example</string>
+  </void>
+  <void property="weatherFile">
+   <string>GBR_London.Gatwick.037760_IWEC.epw</string>
+  </void>
+ </object>
+</java>
