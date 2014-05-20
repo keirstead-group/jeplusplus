@@ -26,7 +26,13 @@ Here's a simple example of how to use jE++.
 
 1. Start a new Java project in Eclipse (or whatever IDE you prefer).  Add the jE++ project to the build path.
 
-2. Create a folder (say `~/jepp_test`) containing:
+2. In your Java code, set the path to the jEPlus jar:
+
+```java
+JEPlusController.setJarPath("/path/to/jEPlus.jar");
+```
+
+3. Create a folder (say `~/jepp_test`) containing:
 
    * An EnergyPlus model file ending in `.imf`
    
@@ -38,7 +44,7 @@ Here's a simple example of how to use jE++.
    
    Configuring these files can be a little tricky.  Please see the `demo` directory for an example.
    
-3. Define a new JEPlusProject object with the following code.  You can of course change the path objects to point wherever you like.
+4. Define a new JEPlusProject object with the following code.  You can of course change the path objects to point wherever you like.
 
 ```java
 Path indir = Paths.get("~/jepp_test");
@@ -46,20 +52,20 @@ Path outdir = indir.resolve("output");
 JEPlusProject project = new JEPlusProject(jePlusInDir, jePlusOutDir);
 ```
 
-4. By default jE++ will add all of the required files listed in Step 2 to the project.  If you have extra files to include, for example if you use a `Schedule:File` object in your `*.imf` file, then these can be added with:
+5. By default jE++ will add all of the required files listed in Step 2 to the project.  If you have extra files to include, for example if you use a `Schedule:File` object in your `*.imf` file, then these can be added with:
 
 ```java
 File file = new File("my-extra-file.txt");
 project.addFiles(file);
 ```
 
-5. You can also use jE++ to set fixed jEPlus parameters.  That is, rather than using jEPlus's sampling architecture to perform multiple runs for an uncertain parameter, jE++ allows you to fix these to a single value.  This is particularly helpful if you want to, for example, run a model for a different month of the year.  In this case, assuming you had a `@@month` parameter defined in the your `.imf` and `.jep` files, ranging from 1 to 12, and you wanted to fix it to the 7th value (i.e. July), then you could type:
+6. You can also use jE++ to set fixed jEPlus parameters.  That is, rather than using jEPlus's sampling architecture to perform multiple runs for an uncertain parameter, jE++ allows you to fix these to a single value.  This is particularly helpful if you want to, for example, run a model for a different month of the year.  In this case, assuming you had a `@@month` parameter defined in the your `.imf` and `.jep` files, ranging from 1 to 12, and you wanted to fix it to the 7th value (i.e. July), then you could type:
 
 ```java
 project.setFixedParameterValue("@@month@@", 7);
 ```
 
-6. When you're ready, the model can be run as follows.  
+7. When you're ready, the model can be run as follows.  
 
 ```java
 project.run();
@@ -67,7 +73,7 @@ project.run();
 
 The results will be placed in the output directory specified in the constructor.
 
-7. If you would like to scale the results by an arbitrary factor, this can be done with the following code.  Note that this will transform all of the columns in the simulation results file except the first three (which are time steps and scenario information).  Obviously this only makes sense if the outputs are things like energy consumption, rather than say temperature.
+8. If you would like to scale the results by an arbitrary factor, this can be done with the following code.  Note that this will transform all of the columns in the simulation results file except the first three (which are time steps and scenario information).  Obviously this only makes sense if the outputs are things like energy consumption, rather than say temperature.
 
 ```java
 project.scaleResults(2.5);
