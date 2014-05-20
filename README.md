@@ -32,17 +32,15 @@ Here's a simple example of how to use jE++.
    JEPlusController.setJarPath("/path/to/jEPlus.jar");
    ```
 
-3. Create a folder (say `~/jepp_test`) containing:
+3. Create a folder (say `~/jepp_test`) containing the following files. Configuring these files can be a little tricky; please see the `demo` directory for an example.
 
-   * An EnergyPlus model file ending in `.imf`
-   
-   * An EnergyPlus weather file ending in `.epw`
-   
-   * An EnergyPlus output file ending in `.mvi`
-   
-   * A jEPlus project file ending in `.jep`
-   
-   Configuring these files can be a little tricky.  Please see the `demo` directory for an example.
+ * An EnergyPlus model file ending in `.imf`
+  
+ * An EnergyPlus weather file ending in `.epw`
+  
+ * An EnergyPlus output file ending in `.mvi`
+ 
+ * A jEPlus project file ending in `.jep`
    
 4. Define a new JEPlusProject object with the following code.  You can of course change the path objects to point wherever you like.
 
@@ -71,7 +69,7 @@ Here's a simple example of how to use jE++.
    project.run();
    ```
 
-The results will be placed in the output directory specified in the constructor.
+   The results will be placed in the output directory specified in the constructor.
 
 8. If you would like to scale the results by an arbitrary factor, this can be done with the following code.  Note that this will transform all of the columns in the simulation results file except the first three (which are time steps and scenario information).  Obviously this only makes sense if the outputs are things like energy consumption, rather than say temperature.
 
