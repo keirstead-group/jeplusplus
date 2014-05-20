@@ -44,7 +44,7 @@ import uk.ac.imperial.jeplusplus.samplers.JEPlusSampler;
 import uk.ac.imperial.jeplusplus.samplers.RandomSampler;
 
 /**
- * Describes a jEPlus project file
+ * Describes a jEPlus project.
  * 
  * @author James Keirstead
  * 
@@ -66,13 +66,15 @@ public class JEPlusProject {
 	}
 
 	/**
-	 * Creates a new JEPlusProject from a specified directory. It assumes that
-	 * there is one *.jep, *.imf, *.mvi, and *.epw file present.
+	 * Creates a new JEPlusProject from a specified directory.
+	 * <p>
+	 * Assumes that within <code>input</code>, there is one *.jep, *.imf, *.mvi,
+	 * and *.epw file present.
 	 * 
 	 * @param indir
 	 *            a Path object giving the input directory
 	 * @param outdir
-	 * 		a Path object giving the output directory           
+	 *            a Path object giving the output directory
 	 */
 	public JEPlusProject(Path indir, Path outdir) {
 		this();
@@ -122,7 +124,10 @@ public class JEPlusProject {
 	}
 
 	/**
-	 * Writes this jePlusProject to file
+	 * Writes this jePlusProject to a specified file
+	 * 
+	 * @param file
+	 *            the file to write the project to
 	 */
 	public void writeToFile(File file) {
 
@@ -145,8 +150,10 @@ public class JEPlusProject {
 	}
 
 	/**
-	 * Loads the template project file
+	 * Loads a specified template project file
 	 * 
+	 * @param template
+	 *            a File object specifying the template *.jep file
 	 * @return the project Document
 	 * @throws ParserConfigurationException
 	 * @throws IOException
@@ -166,12 +173,18 @@ public class JEPlusProject {
 		jep.getDocumentElement().normalize();
 	}
 
+	/**
+	 * Gets the XML document describing this JEPlusProject
+	 * 
+	 * @return an XML Document object
+	 */
 	public Document getProjectXML() {
 		return jep;
 	}
 
 	/**
-	 * Gets a node of length 1 from this JEPlusProject DOM
+	 * Gets a node of length 1 from this JEPlusProject DOM matching a specified
+	 * search query
 	 * 
 	 * @param query
 	 *            an xpath search query
@@ -260,6 +273,11 @@ public class JEPlusProject {
 		n.getFirstChild().setNodeValue(notes);
 	}
 
+	/**
+	 * Gets the XML node containing the notes field
+	 * 
+	 * @return the notes node if found, else null
+	 */
 	protected Node getNotesNode() {
 		return getSingleNode("//void[@property=\"projectNotes\"]//string");
 	}
@@ -277,6 +295,11 @@ public class JEPlusProject {
 		n.getFirstChild().setNodeValue(weather);
 	}
 
+	/**
+	 * Gets the XML node containing the weather field
+	 * 
+	 * @return the weather node if found, else null
+	 */
 	protected Node getWeatherNode() {
 		return getSingleNode("//void[@property=\"weatherFile\"]//string");
 	}
@@ -298,11 +321,13 @@ public class JEPlusProject {
 	}
 
 	/**
-	 * Gets a single file from an Array of File objects. If the array contains
-	 * more than one file, a warning is generated and the first file returned.
+	 * Gets a single file from an Array of File objects.
 	 * 
 	 * @param files
-	 * @return
+	 *            an array of multiple files
+	 * 
+	 * @return the only file within <code>files</code> if the length is one,
+	 *         else returns the first file in the array.
 	 */
 	private File getSingleFile(File[] files) {
 		if (files.length != 1) {
@@ -332,7 +357,8 @@ public class JEPlusProject {
 	 * order the parameters are specified in and then use this accordingly.
 	 * 
 	 * @param name
-	 * @return
+	 *            the name of the parameter
+	 * @return the value of the parameter
 	 */
 	protected int getFixedParameterValue(String name) {
 		Node n = getFixedParameterNode(name);
@@ -402,14 +428,17 @@ public class JEPlusProject {
 		}
 	}
 
+	/**
+	 * Gets all of the files associated with this JEPlusProject
+	 * 
+	 * @return a Collection of File objects
+	 */
 	public Collection<File> getProjectFiles() {
 		return files;
 	}
 
 	/**
 	 * Runs this JEPlusProject.
-	 * <p>
-	 * This method will call jEPlus and run the project.
 	 * 
 	 * @throws IOException
 	 * @throws FileNotFoundException
@@ -422,7 +451,6 @@ public class JEPlusProject {
 		File config = indir.resolve("jeplus_v80.cfg").toFile();
 		JEPlusSampler sampler = new RandomSampler(1);
 		controller.runJob(this, config, sampler);
-
 	}
 
 	/**
@@ -451,8 +479,7 @@ public class JEPlusProject {
 
 		// Write the results to the new file applying the scaling
 		int nHeaderRows = 1;
-		File scaledFile = outdir.resolve("SimResults-scaled.csv")
-				.toFile();
+		File scaledFile = outdir.resolve("SimResults-scaled.csv").toFile();
 		Writer output = new BufferedWriter(new FileWriter(scaledFile));
 		CSVWriter writer = new CSVWriter(output);
 		int lineCount = 0;

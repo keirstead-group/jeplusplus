@@ -1,7 +1,5 @@
 package uk.ac.imperial.jeplusplus;
 
-import static org.junit.Assert.*;
-
 import java.io.File;
 
 import org.junit.After;

@@ -1,5 +1,11 @@
 package uk.ac.imperial.jeplusplus.parameters;
 
+/**
+ * Describes the range of possible month values.
+ * 
+ * @author James Keirstead
+ * 
+ */
 public class MonthParameterRange extends ParameterRange<Integer> {
 
 	@Override
