@@ -55,7 +55,8 @@ public class JEPlusProject {
 
 	private Document jep;
 	private ArrayList<File> files;
-	private Path dir;
+	private Path indir;
+	private Path outdir;
 
 	/**
 	 * Creates a new JEPlusProject
@@ -68,18 +69,21 @@ public class JEPlusProject {
 	 * Creates a new JEPlusProject from a specified directory. It assumes that
 	 * there is one *.jep, *.imf, *.mvi, and *.epw file present.
 	 * 
-	 * @param dir
-	 *            a File object giving the directory
+	 * @param indir
+	 *            a Path object giving the input directory
+	 * @param outdir
+	 * 		a Path object giving the output directory           
 	 */
-	public JEPlusProject(File dir) {
+	public JEPlusProject(Path indir, Path outdir) {
 		this();
 
-		this.dir = dir.toPath();
+		this.indir = indir;
+		this.outdir = outdir;
 
-		File[] jepFiles = getFileFilter(dir.toPath(), "*.jep");
-		File[] idfFiles = getFileFilter(dir.toPath(), "*.imf");
-		File[] mviFiles = getFileFilter(dir.toPath(), "*.mvi");
-		File[] epwFiles = getFileFilter(dir.toPath(), "*.epw");
+		File[] jepFiles = getFileFilter(indir, "*.jep");
+		File[] idfFiles = getFileFilter(indir, "*.imf");
+		File[] mviFiles = getFileFilter(indir, "*.mvi");
+		File[] epwFiles = getFileFilter(indir, "*.epw");
 		File jep = getSingleFile(jepFiles);
 		File idf = getSingleFile(idfFiles);
 		File mvi = getSingleFile(mviFiles);
@@ -413,12 +417,9 @@ public class JEPlusProject {
 	 */
 	public void run() throws FileNotFoundException, IOException {
 
-		// Where do we want the results to be saved?
-		File outdir = dir.resolve("output").toFile();
-
 		// Define the controllers and run the job
-		JEPlusController controller = new JEPlusController(outdir);
-		File config = dir.resolve("jeplus_v80.cfg").toFile();
+		JEPlusController controller = new JEPlusController(outdir.toFile());
+		File config = indir.resolve("jeplus_v80.cfg").toFile();
 		JEPlusSampler sampler = new RandomSampler(1);
 		controller.runJob(this, config, sampler);
 
@@ -436,8 +437,7 @@ public class JEPlusProject {
 	 */
 	public void scaleResults(double factor) throws IOException {
 
-		Path jePlusOutDir = dir.resolve("output");
-		File rawFile = jePlusOutDir.resolve("SimResults.csv").toFile();
+		File rawFile = outdir.resolve("SimResults.csv").toFile();
 
 		if (!rawFile.exists()) {
 			throw new FileNotFoundException("Unable to find the results file.");
@@ -451,7 +451,7 @@ public class JEPlusProject {
 
 		// Write the results to the new file applying the scaling
 		int nHeaderRows = 1;
-		File scaledFile = jePlusOutDir.resolve("SimResults-scaled.csv")
+		File scaledFile = outdir.resolve("SimResults-scaled.csv")
 				.toFile();
 		Writer output = new BufferedWriter(new FileWriter(scaledFile));
 		CSVWriter writer = new CSVWriter(output);

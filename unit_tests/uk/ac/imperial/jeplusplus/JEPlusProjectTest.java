@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -22,7 +24,9 @@ import org.w3c.dom.NodeList;
 public class JEPlusProjectTest {
 
 	JEPlusProject project;
-
+	Path in = Paths.get("demo");
+	Path out = in.resolve("output");
+	
 	@Before
 	public void setUp() throws Exception {
 		project = new JEPlusProject();
@@ -150,7 +154,8 @@ public class JEPlusProjectTest {
 	
 	@Test
 	public void testRun() {		
-		project = new JEPlusProject(new File("demo"));
+		
+		project = new JEPlusProject(in, out);
 		try {
 			project.run();
 		} catch (IOException e) {
@@ -160,7 +165,7 @@ public class JEPlusProjectTest {
 	
 	@Test
 	public void testScaleResults() {		
-		project = new JEPlusProject(new File("demo"));
+		project = new JEPlusProject(in, out);
 		try {
 			project.run();
 			project.scaleResults(2);
