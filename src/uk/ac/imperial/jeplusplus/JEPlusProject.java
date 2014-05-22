@@ -339,10 +339,12 @@ public class JEPlusProject {
 	}
 
 	/**
-	 * Sets the value of a fixed parameter within this JEPlusProject
+	 * Sets the value of a fixed parameter within this JEPlusProject. Currently
+	 * you have to manually search the \code{jep} file in order to find the id
+	 * reference of the object node containing the parameter of interest.  
 	 * 
 	 * @param name
-	 *            a String giving the parameter name, e.g. "@@weekday@@"
+	 *            a String giving the parameter name, e.g. "ParameterItem1"
 	 * @param value
 	 *            the value to be fixed. Corresponds to the index within the
 	 *            specified parameter list.
