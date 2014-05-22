@@ -33,6 +33,9 @@ public class Demo {
 		 */
 		project.setFixedParameterValue("ParameterItem2", 7);
 		project.run();
+		
+		// Scale the results by an arbitrary factor
+		project.scaleResults(2.5);
 
 	}
 
