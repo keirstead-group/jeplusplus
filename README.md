@@ -26,28 +26,24 @@ Here's a simple example of how to use jE++.
 
 1. Start a new Java project in Eclipse (or whatever IDE you prefer).  Add the jE++ project to the build path.
 
-2. In your Java code, set the path to the jEPlus jar:
+1. In your Java code, set the path to the jEPlus jar:
 
    ```java
    JEPlusController.setJarPath("/path/to/jEPlus.jar");
    ```
 
-3. Create a folder (say `~/jepp_test`) containing the following files. Configuring these files can be a little tricky; please see the `demo` directory for an example.
-
- * An EnergyPlus model file ending in `.imf`
-  
- * An EnergyPlus weather file ending in `.epw`
-  
- * An EnergyPlus output file ending in `.mvi`
- 
- * A jEPlus project file ending in `.jep`
+1. Create a folder (say `~/jepp_test`) containing the following files. Configuring these files can be a little tricky; please see the `demo` directory for an example.
+  * An EnergyPlus model file ending in `.imf`
+  * An EnergyPlus weather file ending in `.epw`
+  * An EnergyPlus output file ending in `.mvi`
+  * A jEPlus project file ending in `.jep`
    
-4. Define a new JEPlusProject object with the following code.  You can of course change the path objects to point wherever you like.
+1. Define a new JEPlusProject object with the following code.  You can of course change the path objects to point wherever you like.
 
    ```java
    Path indir = Paths.get("~/jepp_test");
    Path outdir = indir.resolve("output");
-   JEPlusProject project = new JEPlusProject(jePlusInDir, jePlusOutDir);
+   JEPlusProject project = new JEPlusProject(indir, outdir);
    ```
 
 5. By default jE++ will add all of the required files listed in Step 2 to the project.  If you have extra files to include, for example if you use a `Schedule:File` object in your `*.imf` file, then these can be added with:
