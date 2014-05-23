@@ -1,3 +1,10 @@
+jePlusPlus-0.1.1 (2014-05-23)
+-----------------------------
+
+* Fixed a bug with the demo
+
+* Documentation improvements
+
 jePlusPlus-0.1.0 (2014-05-20)
 -----------------------------
 
