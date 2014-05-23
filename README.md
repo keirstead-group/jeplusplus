@@ -22,7 +22,7 @@ To use jE++, you need the following software installed:
  
 ## How to use
 
-Here's a simple example of how to use jE++.
+Here's a simple example of how to use jE++.  The full source code of this demo can be found in [Demo.java](src/uk/ac/imperial/jeplusplus/Demo.java).
 
 1. Start a new Java project in Eclipse (or whatever IDE you prefer).  Add the jE++ project to the build path.
 
@@ -57,12 +57,12 @@ Here's a simple example of how to use jE++.
    project.addFiles(file);
    ```
 
-6. You can also use jE++ to set fixed jEPlus parameters.  That is, rather than using jEPlus's sampling architecture to perform multiple runs for an uncertain parameter, jE++ allows you to fix these to a single value.  This is particularly helpful if you want to, for example, run a model for a different month of the year.  In this case, assuming you had a `@@month` parameter defined in the your `.imf` and `.jep` files, ranging from 1 to 12, and you wanted to fix it to the 7th value (i.e. July), then you could type:
+6. You can also use jE++ to set fixed jEPlus parameters.  That is, rather than using jEPlus's sampling architecture to perform multiple runs for an uncertain parameter, jE++ allows you to fix these to a single value.  This is particularly helpful if you want to, for example, run a model for a different month of the year.  In this case, assume that you had a `@@month@@` parameter whose value ranges from 1 to 12.  If you wanted to fix it to the 7th value (i.e. July), then you could type:
 
    ```java
    project.setFixedParameterValue("@@month@@", 7);
    ```
-
+   
 7. When you're ready, the model can be run as follows.  
 
    ```java

@@ -141,18 +141,23 @@ public class JEPlusProjectTest {
 	
 	@Test
 	public void testGetFixedParameterValue() {		
-		int value = project.getFixedParameterValue("ParameterItem2");
+		int value = project.getFixedParameterValue("@@month@@");
 		assertEquals(1, value);
 	}
 	
 	@Test
 	public void testSetParameterNode() {
 		
-		project.setFixedParameterValue("ParameterItem2", 3);
-		assertEquals(3, project.getFixedParameterValue("ParameterItem2"));
+		project.setFixedParameterValue("@@month@@", 3);
+		assertEquals(3, project.getFixedParameterValue("@@month@@"));
 
 	}
 	
+	@Test
+	public void testGetContainingObjectId() {
+		String objectId = project.getContainingObjectId("@@month@@");
+		assertEquals("ParameterItem2", objectId);
+	}
 	@Test
 	public void testRun() {		
 		
