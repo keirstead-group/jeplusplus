@@ -341,7 +341,7 @@ public class JEPlusProject {
 	/**
 	 * Sets the value of a fixed parameter within this JEPlusProject. Currently
 	 * you have to manually search the \code{jep} file in order to find the id
-	 * reference of the object node containing the parameter of interest.  
+	 * reference of the object node containing the parameter of interest.
 	 * 
 	 * @param name
 	 *            a String giving the parameter name, e.g. "ParameterItem1"
@@ -419,6 +419,42 @@ public class JEPlusProject {
 
 			if (nl.getLength() == 1) {
 				return nl.item(0);
+			} else {
+				log.warning(String.format(
+						"%d nodes found matching '%s'.  Returning null",
+						nl.getLength(), query));
+				return null;
+			}
+		} catch (XPathExpressionException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * Gets the id of the object node containing a specified jEPlus parameter
+	 * name
+	 * 
+	 * @param parameter
+	 *            the parameter name
+	 * @return the idref attribute value of the containing object node
+	 */
+	protected String getContainingObjectId(String parameter) {
+		try {
+			String query = String.format("//string[.='%s']", parameter);
+			XPathFactory xPathfactory = XPathFactory.newInstance();
+			XPath xpath = xPathfactory.newXPath();
+			XPathExpression expr;
+			expr = xpath.compile(query);
+			NodeList nl = (NodeList) expr.evaluate(jep, XPathConstants.NODESET);
+
+			if (nl.getLength() == 1) {
+				nl = nl.item(0).getParentNode().getChildNodes();
+				query = "./object";
+				expr = xpath.compile(query);
+				nl = (NodeList) expr.evaluate(nl, XPathConstants.NODESET);
+				Node n = nl.item(0);
+				String s = n.getAttributes().getNamedItem("idref").getNodeValue();
+				return s;
 			} else {
 				log.warning(String.format(
 						"%d nodes found matching '%s'.  Returning null",
