@@ -5,7 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * A simple demostration of jE++
+ * A simple demonstration of jE++
  * 
  * @author James Keirstead
  * 
@@ -28,12 +28,12 @@ public class Demo {
 		JEPlusProject project = new JEPlusProject(input, output);
 
 		/*
-		 * The project file describes a parameter called @@month@@ which is
-		 * contained within the object ParameterItem2. Fix this value to July
+		 * The project file describes a parameter called @@month@@. Fix this
+		 * value to July
 		 */
-		project.setFixedParameterValue("ParameterItem2", 7);
+		project.setFixedParameterValue("@@month@@", 7);
 		project.run();
-		
+
 		// Scale the results by an arbitrary factor
 		project.scaleResults(2.5);
 

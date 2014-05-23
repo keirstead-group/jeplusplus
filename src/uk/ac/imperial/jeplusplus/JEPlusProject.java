@@ -196,8 +196,7 @@ public class JEPlusProject {
 		try {
 			XPathFactory xPathfactory = XPathFactory.newInstance();
 			XPath xpath = xPathfactory.newXPath();
-			XPathExpression expr;
-			expr = xpath.compile(query);
+			XPathExpression expr = xpath.compile(query);
 			NodeList nl = (NodeList) expr.evaluate(jep, XPathConstants.NODESET);
 
 			if (nl.getLength() == 1) {
@@ -344,13 +343,14 @@ public class JEPlusProject {
 	 * reference of the object node containing the parameter of interest.
 	 * 
 	 * @param name
-	 *            a String giving the parameter name, e.g. "ParameterItem1"
+	 *            a String giving the parameter name, e.g. "@@month@@"
 	 * @param value
 	 *            the value to be fixed. Corresponds to the index within the
 	 *            specified parameter list.
 	 */
 	public void setFixedParameterValue(String name, int value) {
-		Node n = getFixedParameterNode(name);
+		String container = getContainingObjectId(name);
+		Node n = getFixedParameterNode(container);
 		n.getFirstChild().setNodeValue(String.valueOf(value));
 	}
 
@@ -359,11 +359,12 @@ public class JEPlusProject {
 	 * order the parameters are specified in and then use this accordingly.
 	 * 
 	 * @param name
-	 *            the name of the parameter
+	 *            the jEPlus parameter name, e.g. "@@month@@"
 	 * @return the value of the parameter
 	 */
 	protected int getFixedParameterValue(String name) {
-		Node n = getFixedParameterNode(name);
+		String container = getContainingObjectId(name);
+		Node n = getFixedParameterNode(container);
 		int value = Integer.valueOf(n.getFirstChild().getNodeValue());
 		return value;
 	}
@@ -381,8 +382,7 @@ public class JEPlusProject {
 			String query = "void[@property=\"selectedAltValue\"]";
 			XPathFactory xPathfactory = XPathFactory.newInstance();
 			XPath xpath = xPathfactory.newXPath();
-			XPathExpression expr;
-			expr = xpath.compile(query);
+			XPathExpression expr = xpath.compile(query);
 			NodeList nl = (NodeList) expr.evaluate(n, XPathConstants.NODESET);
 			if (nl.getLength() == 1) {
 				return nl.item(0).getChildNodes().item(1);
@@ -396,12 +396,9 @@ public class JEPlusProject {
 	/**
 	 * Gets a named ParameterNode from this JEPlusProject.
 	 * <p>
-	 * Unfortunately there is no easy way to do this query. At the moment, you
-	 * have to pass it the full name of the node id which can be found by
-	 * manually inspecting the *.jep file. With a simple tree: <code>
-	 * root > param1 > param2 > param3
-	 * </code> you would find the node param2 by searching with
-	 * <code>name=ParameterItem2</code>.
+	 * This needs to be the name of the object idref, e.g. ParameterItem1. This
+	 * can be found using {@link #getContainingObjectId(String)} and passing it
+	 * the jEPlus parameter code.
 	 * 
 	 * @param name
 	 *            the id field of the Node as described above.
@@ -413,8 +410,7 @@ public class JEPlusProject {
 			String query = String.format("//object[@id='%s']", name);
 			XPathFactory xPathfactory = XPathFactory.newInstance();
 			XPath xpath = xPathfactory.newXPath();
-			XPathExpression expr;
-			expr = xpath.compile(query);
+			XPathExpression expr = xpath.compile(query);
 			NodeList nl = (NodeList) expr.evaluate(jep, XPathConstants.NODESET);
 
 			if (nl.getLength() == 1) {
@@ -443,8 +439,7 @@ public class JEPlusProject {
 			String query = String.format("//string[.='%s']", parameter);
 			XPathFactory xPathfactory = XPathFactory.newInstance();
 			XPath xpath = xPathfactory.newXPath();
-			XPathExpression expr;
-			expr = xpath.compile(query);
+			XPathExpression expr = xpath.compile(query);
 			NodeList nl = (NodeList) expr.evaluate(jep, XPathConstants.NODESET);
 
 			if (nl.getLength() == 1) {
@@ -453,7 +448,8 @@ public class JEPlusProject {
 				expr = xpath.compile(query);
 				nl = (NodeList) expr.evaluate(nl, XPathConstants.NODESET);
 				Node n = nl.item(0);
-				String s = n.getAttributes().getNamedItem("idref").getNodeValue();
+				String s = n.getAttributes().getNamedItem("idref")
+						.getNodeValue();
 				return s;
 			} else {
 				log.warning(String.format(
